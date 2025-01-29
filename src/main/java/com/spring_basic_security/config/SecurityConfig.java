@@ -22,20 +22,28 @@ public class SecurityConfig {
      * @throws Exception in case of any configuration issues
      */
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Disable CSRF protection for simplicity in certain use cases (not recommended in production).
-        http.csrf(customizer -> customizer.disable());
+        http.csrf(customizer -> customizer.disable())
+                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Restrict all requests to be authenticated unless explicitly allowed.
-        http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
 
-        // Enable default form-based login for authentication.
-        http.formLogin(Customizer.withDefaults());
 
-        // Enable HTTP Basic authentication.
-        http.httpBasic(Customizer.withDefaults());
 
-        // Configure session management to be stateless.
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        // Disable CSRF protection for simplicity in certain use cases (not recommended in production).
+//        http.csrf(customizer -> customizer.disable());
+//
+//        // Restrict all requests to be authenticated unless explicitly allowed.
+//        http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+//
+//        // Enable default form-based login for authentication.
+//        http.formLogin(Customizer.withDefaults());
+//
+//        // Enable HTTP Basic authentication.
+//        http.httpBasic(Customizer.withDefaults());
+//
+//        // Configure session management to be stateless.
+//        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // Build and return the SecurityFilterChain.
         return http.build();
